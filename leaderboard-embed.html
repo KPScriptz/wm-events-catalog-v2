@@ -12,7 +12,9 @@
 :root{--mint:#01A94F}
 @font-face{font-family:'Ka1';src:url('assets/ntt/ka1.ttf') format('truetype')}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:transparent;display:flex;justify-content:center;padding:6px 0 0;font-family:system-ui,sans-serif}
+/* NOT transparent: an iframe paints its own white canvas under a transparent document,
+   which showed as a bright slab inside the dark catalog page. */
+body{background:#0C2412;display:flex;justify-content:center;padding:6px 0 0;font-family:system-ui,sans-serif}
 .stage{display:flex;flex-direction:column;align-items:center}
 
 /* ---------- touchscreen TV unit (matches Polaris demo) ---------- */
@@ -180,6 +182,7 @@ const seedCount=7;let seeded=0;
 /* parent catalog pauses the sim when scrolled off-screen */
 let simPaused=false;
 addEventListener('message',e=>{
+  if(e.origin!==location.origin)return;   // only the hosting catalog drives us
   if(!e.data||!e.data.cmd)return;
   simPaused=(e.data.cmd==='pause');
 });

@@ -113,7 +113,10 @@ footer .fine{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-
 footer .fine a{color:var(--muted)}
 
 /* embed overrides */
-body{background:transparent;display:flex;justify-content:center;padding:6px 0 0}
+/* NOT transparent: an iframe paints its own white canvas under a transparent document,
+   so this rendered as a bright white slab inside the dark catalog page. Match the
+   catalog background instead. */
+body{background:var(--bg);display:flex;justify-content:center;padding:6px 0 0}
 .frame{width:min(400px,88vw)}
 .stand{width:min(400px,88vw)}
 .stage{gap:0}
@@ -224,6 +227,7 @@ armIdle();
 /* parent catalog pauses us when scrolled off-screen */
 let parked=false;
 addEventListener('message',e=>{
+  if(e.origin!==location.origin)return;   // only the hosting catalog drives us
   if(!e.data||!e.data.cmd)return;
   if(e.data.cmd==='pause'){parked=true;clearTimeout(idleT);pv.pause();av.pause();}
   if(e.data.cmd==='resume'&&parked){parked=false;if(attract.classList.contains('open'))av.play().catch(()=>{});armIdle();}

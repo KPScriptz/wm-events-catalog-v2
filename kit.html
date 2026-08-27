@@ -7,7 +7,7 @@
 <title>Asset Kit · Pivot × WM Events</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&amp;display=swap">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='none' stroke='%2301A94F' stroke-width='10'/%3E%3C/svg%3E">
 <style>
 @font-face{font-family:Gyst;src:url(assets/fonts/Gyst-Bold.otf) format('opentype');font-weight:700;font-display:swap}
@@ -17,7 +17,7 @@
   --bg:#0C2412; --surface:#143019; --raise:#1D4122; --line:rgba(1,169,79,.20);
   --ink:#FFFEF7; --muted:#AEC6B4; --dim:#8AA791;
   --mint:#01A94F; --mint-deep:#016531; --mint-ink:#06210F;--mint-lt:#5FDD9A;--gold:#CFB888;
-  --disp:"Gyst",Georgia,serif; --body:"Montserrat",system-ui,sans-serif; --mono:"Montserrat",system-ui,sans-serif;
+  --disp:"Gyst",Georgia,serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif; --mono:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -37,7 +37,8 @@ h1{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:cl
 .pack:hover{border-color:rgba(1,169,79,.45)}
 .pack .num{font-family:var(--mono);font-size:.75rem;color:var(--mint);letter-spacing:.15em;flex:none}
 .pack .info{flex:1;min-width:0}
-.pack h2{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:1.05rem}
+.pack h2{font-family:var(--body);font-weight:600;text-transform:uppercase;font-size:.88rem;letter-spacing:.09em;margin-bottom:.3rem}
+.pack .num,.pack .dl{font-variant-numeric:tabular-nums lining-nums}
 .pack p{color:var(--muted);font-size:.88rem}
 .pack .dl{flex:none;display:flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mint-ink);
   background:var(--mint);border-radius:4px;padding:.6rem .95rem;white-space:nowrap}

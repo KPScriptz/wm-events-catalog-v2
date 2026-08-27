@@ -8,8 +8,16 @@
 <meta name="description" content="PivotXP experiential product catalog, prepared for WM Events.">
 <meta property="og:title" content="Pivot × WM Events — The Experience Catalog">
 <meta property="og:description" content="Capture systems, gamification, AI enhancements, and physical takeaways — with three live demos you can drive in the browser.">
-<meta property="og:image" content="https://pivotxp.github.io/wm-events-catalog/assets/img/og-cover.jpg">
-<meta property="og:url" content="https://pivotxp.github.io/wm-events-catalog/">
+<!-- og:image must be absolute for scrapers. It points at the copy that actually holds
+     the current card; the original repo still has the old one. Update this single line
+     if this build is merged back to pivotxp/wm-events-catalog.
+     Regenerate the card itself with: node tools/make-og.mjs -->
+<meta property="og:image" content="https://kpscriptz.github.io/wm-events-catalog-v2/assets/img/og-cover.jpg?v=5">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pivot × WM Events — The Experience Catalog">
+<!-- no og:url on purpose: scrapers fall back to the URL actually shared, so the
+     preview card can never send someone to a different build than the link. -->
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0C2412">
@@ -112,6 +120,9 @@ section{padding:clamp(4rem,9vw,7.5rem) clamp(1.2rem,6vw,5rem)}
 /* ---------- product spreads ---------- */
 .product{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(1.5rem,4vw,4rem);align-items:start;padding:clamp(2.5rem,5vw,4rem) 0;border-top:1px solid var(--line)}
 .product:first-of-type{border-top:none;padding-top:0}
+/* a spread with no field media has a short info column next to a full-height
+   render; centring it beats leaving ~220px of dead space under the copy */
+.product:not(:has(.media)){align-items:center}
 .product .stage{background:linear-gradient(180deg,var(--raise),var(--surface));border:1px solid var(--line);border-radius:6px;padding:clamp(1.5rem,3vw,2.6rem);display:flex;align-items:center;justify-content:center;position:sticky;top:5.2rem}
 .product .stage img{max-height:440px;width:auto;max-width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5))}
 .product .info .kicker{margin-bottom:.5rem}
@@ -127,6 +138,9 @@ section{padding:clamp(4rem,9vw,7.5rem) clamp(1.2rem,6vw,5rem)}
 .media{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));align-items:start}
 .media figure{position:relative;border-radius:5px;overflow:hidden;background:var(--surface);border:1px solid var(--line);cursor:zoom-in}
 .media img,.media video{width:100%;height:auto}
+/* posters load on approach, so give the video box a branded fill rather than
+   letting an empty frame flash black against the page */
+video{background:var(--raise)}
 
 .media figcaption{position:absolute;inset:auto 0 0 0;padding:1.5rem .8rem .6rem;font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(241,246,243,.92);background:linear-gradient(transparent,rgba(6,12,9,.85));pointer-events:none}
 .vwrap{position:relative;cursor:pointer}
@@ -392,7 +406,7 @@ footer .fine a{color:var(--muted)}
 
   <!-- Selfie Station -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-lite.png" alt="Selfie Station kiosk with halo ring light, shown in a WM Events custom wrap" loading="lazy" width="679" height="1734"></div>
+    <div class="stage"><img src="assets/img/render-lite.webp" alt="Selfie Station kiosk with halo ring light, shown in a WM Events custom wrap" loading="lazy" width="679" height="1734"></div>
     <div class="info">
       <span class="kicker">PB·01</span>
       <h3>Selfie Station</h3>
@@ -400,18 +414,18 @@ footer .fine a{color:var(--muted)}
       <div class="specs"><span>Stills · GIF · Boomerang · Video</span><span>Instant SMS / Email / QR</span><span>Full custom wrap</span><span>2 ft footprint</span><span>AI background removal</span><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
       <p class="seen">In the field&nbsp;· <b>Downy Unstopables · Gymshark · Marvel</b></p>
       <div class="media">
-        <figure class="vwrap"><video preload="none" poster="assets/poster/selfie-demo.jpg" src="assets/video/selfie-demo.mp4" playsinline width="1080" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>On-screen experience</figcaption></figure>
-        <figure class="vwrap"><video preload="none" poster="assets/poster/selfie-unstopables.jpg" src="assets/video/selfie-unstopables.mp4" playsinline width="540" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Downy Unstopables</figcaption></figure>
-        <figure><img src="assets/img/selfie-event-1.jpg" alt="Guest at a branded Gymshark phone-booth activation" loading="lazy" width="562" height="1000"><figcaption>Gymshark</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/selfie-demo.jpg" src="assets/video/selfie-demo.mp4" playsinline width="1080" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>On-screen experience</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/selfie-unstopables.jpg" src="assets/video/selfie-unstopables.mp4" playsinline width="540" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Downy Unstopables</figcaption></figure>
+        <figure><img src="assets/img/selfie-event-1.webp" alt="Guest at a branded Gymshark phone-booth activation" loading="lazy" width="562" height="1000"><figcaption>Gymshark</figcaption></figure>
         <figure><img src="assets/img/selfie-event-2.jpg" alt="Selfie Station activation on site" loading="lazy" width="1400" height="1400"><figcaption>On site</figcaption></figure>
-        <figure><img src="assets/img/selfie-event-3.jpg" alt="Guest photographed against a Marvel branded backdrop" loading="lazy" width="1000" height="1000"><figcaption>Marvel · Brave New World</figcaption></figure>
+        <figure><img src="assets/img/selfie-event-3.webp" alt="Guest photographed against a Marvel branded backdrop" loading="lazy" width="1000" height="1000"><figcaption>Marvel · Brave New World</figcaption></figure>
       </div>
     </div>
   </article>
 
   <!-- PRO -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-pro.png" alt="PRO booth, front and back, with adjustable tilting head unit" loading="lazy" width="848" height="1174"></div>
+    <div class="stage"><img src="assets/img/render-pro.webp" alt="PRO booth, front and back, with adjustable tilting head unit" loading="lazy" width="848" height="1174"></div>
     <div class="info">
       <span class="kicker">PB·02</span>
       <h3>PRO</h3>
@@ -419,8 +433,8 @@ footer .fine a{color:var(--muted)}
       <div class="specs"><span>DSLR-grade capture</span><span>Adjustable head</span><span>Stills · GIF · Boomerang · Video</span><span>Physical takeaways</span><span>AI background removal</span><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
       <p class="seen">In the field&nbsp;· <b>CMA Fest</b></p>
       <div class="media">
-        <figure class="vwrap"><video preload="none" poster="assets/poster/pro-demo-1.jpg" src="assets/video/pro-demo-1.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Capture flow</figcaption></figure>
-        <figure class="vwrap"><video preload="none" poster="assets/poster/pro-demo-2.jpg" src="assets/video/pro-demo-2.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Guest experience</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/pro-demo-1.jpg" src="assets/video/pro-demo-1.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Capture flow</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/pro-demo-2.jpg" src="assets/video/pro-demo-2.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Guest experience</figcaption></figure>
         <figure><img src="assets/img/pro-output.jpg" alt="Branded Chevrolet CMA Fest photo output of a guest with guitar in front of a gold record" loading="lazy" width="1400" height="933"><figcaption>Branded output · CMA Fest</figcaption></figure>
       </div>
     </div>
@@ -428,7 +442,7 @@ footer .fine a{color:var(--muted)}
 
   <!-- Elevated Kiosk -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-kiosk.png" alt="Elevated Kiosk with LED edge lighting, large touch screen, and integrated printer" loading="lazy" width="1142" height="1504"></div>
+    <div class="stage"><img src="assets/img/render-kiosk.webp" alt="Elevated Kiosk with LED edge lighting, large touch screen, and integrated printer" loading="lazy" width="1142" height="1504"></div>
     <div class="info">
       <span class="kicker">PB·03</span>
       <h3>Elevated Kiosk</h3>
@@ -439,7 +453,7 @@ footer .fine a{color:var(--muted)}
 
   <!-- Robot -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-robot.png" alt="Robotic camera arm mounted on a rail atop a branded base cabinet" loading="lazy" width="637" height="837"></div>
+    <div class="stage"><img src="assets/img/render-robot.webp" alt="Robotic camera arm mounted on a rail atop a branded base cabinet" loading="lazy" width="637" height="837"></div>
     <div class="info">
       <span class="kicker">PB·04</span>
       <h3>Robot</h3>
@@ -447,15 +461,15 @@ footer .fine a{color:var(--muted)}
       <div class="specs"><span>Programmable moves</span><span>Cinematic slow-mo</span><span>Rail-mounted arm</span><span>Crowd magnet</span><span>AI background removal</span><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
       <p class="seen">In the field&nbsp;· <b>CMA Awards · USAA × NFL Salute to Service · Marvel × American Family Insurance</b></p>
       <div class="media">
-        <figure class="vwrap"><video preload="none" poster="assets/poster/robot-cma.jpg" src="assets/video/robot-cma.mp4" playsinline width="568" height="320"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>CMA Awards</figcaption></figure>
-        <figure class="vwrap"><video preload="none" poster="assets/poster/robot-marvel.jpg" src="assets/video/robot-marvel.mp4" playsinline width="960" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Captain America · AmFam</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/robot-cma.jpg" src="assets/video/robot-cma.mp4" playsinline width="568" height="320"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>CMA Awards</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/robot-marvel.jpg" src="assets/video/robot-marvel.mp4" playsinline width="960" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Captain America · AmFam</figcaption></figure>
       </div>
     </div>
   </article>
 
   <!-- 360 -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-360.png" alt="360 camera platform with rotating boom arm, shown in a WM Events wrap" loading="lazy" width="1338" height="1160"></div>
+    <div class="stage"><img src="assets/img/render-360.webp" alt="360 camera platform with rotating boom arm, shown in a WM Events wrap" loading="lazy" width="1338" height="1160"></div>
     <div class="info">
       <span class="kicker">PB·05</span>
       <h3>360 Camera</h3>
@@ -463,14 +477,14 @@ footer .fine a{color:var(--muted)}
       <div class="specs"><span>Slow-mo orbit video</span><span>Truss or floor mount</span><span>Branded overlays</span><span>Instant delivery</span><span>AI background removal</span><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
       <p class="seen">In the field&nbsp;· <b>CMA Fest</b></p>
       <div class="media">
-        <figure class="vwrap"><video preload="none" poster="assets/poster/360-overhead.jpg" src="assets/video/360-overhead.mp4" playsinline width="1080" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Overhead 360</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/360-overhead.jpg" src="assets/video/360-overhead.mp4" playsinline width="1080" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Overhead 360</figcaption></figure>
       </div>
     </div>
   </article>
 
   <!-- Array -->
   <article class="product reveal">
-    <div class="stage"><img src="assets/img/render-array.png" alt="Array multi-camera gantry with seven camera lenses across the top beam" loading="lazy" width="1150" height="1453"></div>
+    <div class="stage"><img src="assets/img/render-array.webp" alt="Array multi-camera gantry with seven camera lenses across the top beam" loading="lazy" width="1150" height="1453"></div>
     <div class="info">
       <span class="kicker">PB·06</span>
       <h3>Array</h3>
@@ -478,7 +492,7 @@ footer .fine a{color:var(--muted)}
       <div class="specs"><span>7 or 14 cameras, synced</span><span>Freeze + sweep effect</span><span>Walk-through gantry</span><span>Full custom wrap</span><span>AI background removal</span><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
       <p class="seen">In the field&nbsp;· <b>Argylle premiere · Universal Studios</b></p>
       <div class="media">
-        <figure class="vwrap"><video preload="none" poster="assets/poster/array-demo.jpg?v=2" src="assets/video/array-demo.mp4?v=2" playsinline width="568" height="320"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Argylle premiere · bullet-time</figcaption></figure>
+        <figure class="vwrap"><video preload="none" data-poster="assets/poster/array-demo.jpg?v=2" src="assets/video/array-demo.mp4?v=2" playsinline width="568" height="320"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><figcaption>Argylle premiere · bullet-time</figcaption></figure>
       </div>
     </div>
   </article>
@@ -501,19 +515,19 @@ footer .fine a{color:var(--muted)}
       <div class="txt"><span class="kicker">ENH·02</span><h4>Themed Regeneration</h4><p>The same regeneration engine, art-directed to a theme. At CMA Fest, guests stepped out of the booth in full “Western Glam.”</p></div>
     </div>
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/ai-suit.jpg" src="assets/video/ai-suit.mp4" playsinline width="640" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/ai-suit.jpg" src="assets/video/ai-suit.mp4" playsinline width="640" height="960"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">ENH·03</span><h4>AI Head Swap</h4><p>The guest’s face on a pre-approved branded body and scene — team kits, black tie, race suits — every logo, seam, and sponsor mark 100% on point.</p></div>
     </div>
     <div class="card">
-      <div class="art"><img src="assets/img/enhance-1.jpg" alt="Two guests cleanly cut out and placed into a stadium scene" loading="lazy" width="1000" height="1000"></div>
+      <div class="art"><img src="assets/img/enhance-1.webp" alt="Two guests cleanly cut out and placed into a stadium scene" loading="lazy" width="1000" height="1000"></div>
       <div class="txt"><span class="kicker">ENH·04</span><h4>AI Background Removal</h4><p>The subjects stay exactly as shot — lifted from the booth and placed naturally into the scene, edges and all.</p></div>
     </div>
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/enhance-name-sign.jpg" src="assets/video/enhance-name-sign.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/enhance-name-sign.jpg" src="assets/video/enhance-name-sign.mp4" playsinline width="1920" height="1280"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">ENH·05</span><h4>Personalized Signage</h4><p>Background removal with a personal touch — guests type their name and it renders into the scene, like this family’s neon marquee at CMA Fest.</p></div>
     </div>
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/enhance-walkout.jpg" src="assets/video/enhance-walkout.mp4" playsinline width="480" height="384"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/enhance-walkout.jpg" src="assets/video/enhance-walkout.mp4" playsinline width="480" height="384"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">ENH·06</span><h4>AI Walk-Out Video</h4><p>A guest photo and an AI prompt become a custom walk-out video — the guest striding onto the field as the hero of game day.</p></div>
     </div>
   </div>
@@ -555,16 +569,16 @@ footer .fine a{color:var(--muted)}
   </div>
   <div class="cards reveal" id="gamification-cards">
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/karaoke.jpg?v=3" src="assets/video/karaoke.mp4?v=3" playsinline width="1920" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/karaoke.jpg?v=3" src="assets/video/karaoke.mp4?v=3" playsinline width="1920" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">GAME·01</span><h4>Car Karaoke</h4><p>Guests take the driver’s seat and perform — cameras rolling, lyrics on screen, and a share-ready music video delivered at the door. Built for the CMA Awards.</p><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
     </div>
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/pitch.jpg" src="assets/video/pitch.mp4" playsinline width="320" height="568"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/pitch.jpg" src="assets/video/pitch.mp4" playsinline width="320" height="568"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">GAME·02</span><h4>Pitch Against the Machine</h4><p>A radar-tracked pitching duel against a pro on screen. Speed, accuracy, and bragging rights — with a leaderboard to keep the midway packed. Built for Speedway Classic.</p>
       <a class="case" href="https://pivotxp.com/case-studies/chevy-baseball-pitch-interactive-activation-system" target="_blank" rel="noopener">Read the case study</a><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
     </div>
     <div class="card">
-      <div class="art vwrap"><video preload="none" poster="assets/poster/leaderboards.jpg" src="assets/video/leaderboards.mp4" playsinline width="1280" height="720"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="art vwrap"><video preload="none" data-poster="assets/poster/leaderboards.jpg" src="assets/video/leaderboards.mp4" playsinline width="1280" height="720"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">GAME·03</span><h4>Leaderboards</h4><p>Live standings on any screen on site, updated the moment a score lands. Run at LIV Golf, NFL Bootcamp, and for US Cellular.</p><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
     </div>
   </div>
@@ -612,12 +626,12 @@ footer .fine a{color:var(--muted)}
     <p>Beyond the booth line: full custom sets, broadcast desks, and branded builds — designed, fabricated, and run by Pivot crews.</p>
   </div>
   <div class="media reveal field-grid">
-    <figure class="vwrap"><video preload="none" poster="assets/poster/install-liv.jpg" src="assets/video/install-liv.mp4" playsinline width="960" height="540"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
+    <figure class="vwrap"><video preload="none" data-poster="assets/poster/install-liv.jpg" src="assets/video/install-liv.mp4" playsinline width="960" height="540"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
     <figure><img src="assets/img/field-armynavy.jpg" alt="Chevrolet football toss cage at the Army-Navy game with live scoreboard and leaderboard" loading="lazy" width="1600" height="900"></figure>
     <figure><img src="assets/img/field-uscellular.jpg" alt="US Cellular giant boombox button wall at Summerfest" loading="lazy" width="1600" height="1200"></figure>
     <figure><img src="assets/img/field-ally.jpg" alt="Ally ACC Women's Tournament basketball bucket wall with live leaderboard" loading="lazy" width="1299" height="1400"></figure>
     <figure><img src="assets/img/field-trowe.jpg" alt="T. Rowe Price Curiosity Challenge trivia podium at the ACC Men's Tournament" loading="lazy" width="1233" height="1600"></figure>
-    <figure class="vwrap"><video preload="none" poster="assets/poster/field-experience.jpg" src="assets/video/field-experience.mp4" playsinline width="320" height="568"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
+    <figure class="vwrap"><video preload="none" data-poster="assets/poster/field-experience.jpg" src="assets/video/field-experience.mp4" playsinline width="320" height="568"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
     <figure><img src="assets/img/install-photo.jpg" alt="Custom activation install" loading="lazy" width="1400" height="1050"></figure>
   </div>
 </section>
@@ -834,6 +848,18 @@ const frameSrcIO=new IntersectionObserver(es=>es.forEach(e=>{
   f.removeAttribute('data-src');
 }),{rootMargin:'500px 0px'});
 
+// Video posters were 2.5 MB of a 3.4 MB first paint. A <video poster> is fetched
+// eagerly no matter what preload or loading say, so all sixteen downloaded before
+// the reader had scrolled past the cover. Same treatment as the frames.
+const posterIO=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  const v=e.target;
+  posterIO.unobserve(v);
+  v.poster=v.dataset.poster;
+  v.removeAttribute('data-poster');
+}),{rootMargin:'600px 0px'});
+document.querySelectorAll('video[data-poster]').forEach(v=>posterIO.observe(v));
+
 document.querySelectorAll('.pg-unit iframe,.duo iframe').forEach(f=>{
   f.addEventListener('load',()=>tellFrame(f,frameCmd.get(f)||'pause'));
   frameIO.observe(f);
@@ -873,7 +899,8 @@ function mediaFrom(el){
   const vid=el.querySelector('video');
   if(vid){
     const v=document.createElement('video');
-    v.src=vid.getAttribute('src');v.poster=vid.getAttribute('poster')||'';
+    // poster may still be deferred on a card the reader opened immediately
+    v.src=vid.getAttribute('src');v.poster=vid.getAttribute('poster')||vid.dataset.poster||'';
     v.controls=true;v.playsInline=true;v.autoplay=true;
     return v;
   }

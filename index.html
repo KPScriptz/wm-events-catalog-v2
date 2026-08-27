@@ -36,6 +36,10 @@
   --mint:#01A94F; --mint-deep:#016531; --mint-ink:#06210F;--mint-lt:#5FDD9A;--gold:#CFB888;
   --disp:"Gyst",Georgia,serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif; --mono:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --nav-h:66px;
+  /* one motion vocabulary for the whole page: a long, decelerating curve that
+     settles rather than stops, and a shorter one for direct interactions */
+  --ease:cubic-bezier(.16,1,.3,1);
+  --ease-soft:cubic-bezier(.4,0,.2,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 /* Anchor jumps used to bury the section heading under the fixed nav.
@@ -95,7 +99,9 @@ h1,h2,h3{font-family:var(--disp);text-wrap:balance}
   radial-gradient(1200px 600px at 85% -10%,rgba(1,169,79,.10),transparent 60%),
   radial-gradient(900px 500px at -10% 110%,rgba(1,169,79,.06),transparent 60%),
   var(--bg)}
-.cover::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(174,198,180,.10) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(700px 500px at 80% 20%,#000 20%,transparent 75%);pointer-events:none}
+/* --drift is set from the scroll pass so the dot field trails the page slightly */
+.cover::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(174,198,180,.10) 1px,transparent 1px);background-size:26px 26px;background-position:0 var(--drift,0);mask-image:radial-gradient(700px 500px at 80% 20%,#000 20%,transparent 75%);pointer-events:none;will-change:background-position}
+.cover .scroll-cue{transition:opacity .4s var(--ease-soft)}
 .cover .eyebrow{margin-bottom:1.6rem}
 .cover h1{font-size:clamp(2.1rem,6.4vw,6.4rem);font-weight:800;line-height:.95;letter-spacing:-.015em;max-width:12ch}
 .cover h1 em{font-style:normal;color:var(--mint)}
@@ -336,17 +342,56 @@ footer .fine a{color:var(--muted)}
    Gated behind .js so the catalog is fully readable if scripting fails or is blocked
    — without this, an IntersectionObserver hiccup leaves the whole page at opacity:0. */
 .reveal{opacity:1}
-.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal{opacity:0;transform:translateY(28px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .js .reveal.in{opacity:1;transform:none}
+
+/* Staggered containers: the box itself never fades — its children arrive in
+   sequence, which reads as deliberate rather than as one block switching on.
+   --i is assigned per child in script. */
+.js .reveal.stagger{opacity:1;transform:none}
+.js .reveal.stagger>*{opacity:0;transform:translateY(26px);
+  transition:opacity .85s var(--ease),transform .85s var(--ease);
+  transition-delay:calc(var(--i,0)*65ms)}
+.js .reveal.stagger.in>*{opacity:1;transform:none}
+/* the roster is a long single line of names — a quicker cadence suits it */
+.js .cred-roster.stagger>*{transform:translateY(14px);transition-delay:calc(var(--i,0)*26ms)}
+
+/* artwork settles out of a slight push-in as its card arrives */
+.js .reveal .art img,.js .reveal .art video,
+.js .reveal figure img,.js .reveal figure video{
+  transform:scale(1.05);transition:transform 1.2s var(--ease)}
+.js .reveal.in .art img,.js .reveal.in .art video,
+.js .reveal.in figure img,.js .reveal.in figure video{transform:none}
+
+/* scroll progress — a hairline that fills as the catalog is read */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;
+  background:linear-gradient(90deg,var(--mint-deep),var(--mint));
+  transform:scaleX(var(--p,0));transform-origin:0 50%;
+  will-change:transform;pointer-events:none}
+
+/* interaction: a short lift, never a bounce */
+.card,.plat .p{transition:transform .5s var(--ease),border-color .35s var(--ease-soft)}
+.card:hover,.plat .p:hover{transform:translateY(-4px);border-color:rgba(1,169,79,.42)}
+.pack:hover,.cta-band a,.btn-kit,.kit .actions a{transition:transform .4s var(--ease),background .3s var(--ease-soft)}
+.cta-band a:hover,.kit .actions .primary:hover{transform:translateY(-2px)}
+.nav{transition:border-color .3s var(--ease-soft),box-shadow .4s var(--ease-soft)}
+.nav.scrolled{box-shadow:0 12px 34px -22px rgba(0,0,0,.9)}
+
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .js .reveal{opacity:1;transform:none;transition:none}
+  .js .reveal,.js .reveal.stagger>*{opacity:1;transform:none;transition:none}
+  .js .reveal .art img,.js .reveal .art video,
+  .js .reveal figure img,.js .reveal figure video{transform:none;transition:none}
+  .card:hover,.plat .p:hover,.cta-band a:hover,.kit .actions .primary:hover{transform:none}
+  .progress{display:none}
 }
 </style>
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
 <a class="skip" href="#main">Skip to catalog</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <nav class="nav" id="nav" aria-label="Catalog sections">
   <a class="brand" href="#top"><img src="assets/img/pivot-logo.png" alt="PivotXP" width="2101" height="607"><span class="bx">×</span><img class="jm" src="assets/img/wmevents-mark.svg" alt="WM Events" width="150" height="72"></a>
@@ -378,9 +423,9 @@ footer .fine a{color:var(--muted)}
      Every name below already appears in a caption further down this page —
      this band just collects them into one moment, which is what a prospect
      actually scans for. Counts are provable from the catalog contents. -->
-<div class="cred reveal" id="clients">
+<div class="cred" id="clients">
   <p class="eyebrow">Where this kit has already worked</p>
-  <div class="cred-roster">
+  <div class="cred-roster reveal stagger">
     <span>Chevrolet</span><span>Marvel</span><span>Gymshark</span><span>CMA Fest</span><span>CMA Awards</span>
     <span>USAA × NFL</span><span>Universal Studios</span><span>LIV&nbsp;Golf</span><span>UFC</span><span>Polaris</span>
     <span>AbbVie × MLB</span><span>Lexus</span><span>Ticketmaster</span><span>American Family Insurance</span>
@@ -388,7 +433,7 @@ footer .fine a{color:var(--muted)}
     <span>Ally</span><span>Equinox</span><span>Summerfest</span><span>Army–Navy</span><span>ACC Baseball</span>
     <span>Speedway Classic</span><span>Argylle</span>
   </div>
-  <div class="cred-stats">
+  <div class="cred-stats reveal stagger">
     <div><b>25+</b><i>Brands activated</i></div>
     <div><b>6</b><i>Capture systems in the line</i></div>
     <div><b>3</b><i>Live demos you can drive below</i></div>
@@ -505,7 +550,7 @@ footer .fine a{color:var(--muted)}
     <h2>AI Enhancements</h2>
     <p>A software layer that works on every booth in the line. Swap the world behind your guests, restyle them entirely, or set the whole frame in motion — rendered in seconds, on site.</p>
   </div>
-  <div class="cards reveal">
+  <div class="cards reveal stagger">
     <div class="card">
       <div class="art"><img src="assets/img/enhance-throwing.jpg" alt="AI image regeneration example" loading="lazy" width="1400" height="1400"></div>
       <div class="txt"><span class="kicker">ENH·01</span><h4>AI Image Regeneration</h4><p>A guest’s photo becomes the input to a full prompt — they’re regenerated inside a brand-built scene, like this gridiron hero moment.</p></div>
@@ -540,7 +585,7 @@ footer .fine a{color:var(--muted)}
     <h2>Physical Takeaways</h2>
     <p>Digital delivery is table stakes. These leave the event on refrigerators, desks, and binders — and keep the brand living there long after load-out.</p>
   </div>
-  <div class="cards reveal">
+  <div class="cards reveal stagger">
     <div class="card">
       <div class="art"><img src="assets/img/takeaway-magnets.webp" alt="Chevrolet State Fair of Texas magnets on a refrigerator" loading="lazy" width="828" height="552"></div>
       <div class="txt"><span class="kicker">TA·01</span><h4>Magnets</h4><p>Pressed on site, minutes after capture — square, round, or postcard-sized. Shown from the State Fair of Texas.</p></div>
@@ -567,7 +612,7 @@ footer .fine a{color:var(--muted)}
     <h2>Gamification &amp; Custom Software</h2>
     <p>Give guests something to win and they’ll queue for it — then hand you their data on the way in. Custom game builds with real-time scoring, built on the same platform as everything else in this catalog.</p>
   </div>
-  <div class="cards reveal" id="gamification-cards">
+  <div class="cards reveal stagger" id="gamification-cards">
     <div class="card">
       <div class="art vwrap"><video preload="none" data-poster="assets/poster/karaoke.jpg?v=3" src="assets/video/karaoke.mp4?v=3" playsinline width="1920" height="1080"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
       <div class="txt"><span class="kicker">GAME·01</span><h4>Car Karaoke</h4><p>Guests take the driver’s seat and perform — cameras rolling, lyrics on screen, and a share-ready music video delivered at the door. Built for the CMA Awards.</p><span class="intouch"><em>works with</em><b>your registration platform</b></span></div>
@@ -625,7 +670,7 @@ footer .fine a{color:var(--muted)}
     <h2>In The Field</h2>
     <p>Beyond the booth line: full custom sets, broadcast desks, and branded builds — designed, fabricated, and run by Pivot crews.</p>
   </div>
-  <div class="media reveal field-grid">
+  <div class="media reveal stagger field-grid">
     <figure class="vwrap"><video preload="none" data-poster="assets/poster/install-liv.jpg" src="assets/video/install-liv.mp4" playsinline width="960" height="540"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
     <figure><img src="assets/img/field-armynavy.jpg" alt="Chevrolet football toss cage at the Army-Navy game with live scoreboard and leaderboard" loading="lazy" width="1600" height="900"></figure>
     <figure><img src="assets/img/field-uscellular.jpg" alt="US Cellular giant boombox button wall at Summerfest" loading="lazy" width="1600" height="1200"></figure>
@@ -715,7 +760,7 @@ footer .fine a{color:var(--muted)}
     <h2>Why Pivot</h2>
     <p>Most of what goes wrong on an activation happens in the gaps between vendors. We removed the gaps.</p>
   </div>
-  <div class="plat reveal">
+  <div class="plat reveal stagger">
     <div class="p">
       <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
       <h4>One vendor, no seams</h4>
@@ -792,9 +837,60 @@ footer .fine a{color:var(--muted)}
   <p class="lb-cap"></p>
 </div>
 <script>
-// nav border on scroll
+const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// stagger index for every child of a .stagger container, so the CSS delay is
+// positional rather than hand-written per grid
+document.querySelectorAll('.reveal.stagger').forEach(c=>{
+  [...c.children].forEach((el,i)=>el.style.setProperty('--i',i));
+});
+
+// nav state, scroll progress and the cover drift all read scroll position, so
+// they share one rAF-throttled pass rather than three listeners doing layout work
 const nav=document.getElementById('nav');
-addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+const progress=document.getElementById('progress');
+const cover=document.querySelector('.cover');
+const cue=document.querySelector('.scroll-cue');
+let scrollQueued=false;
+function onScroll(){
+  scrollQueued=false;
+  const y=scrollY;
+  nav.classList.toggle('scrolled',y>40);
+  const max=document.documentElement.scrollHeight-innerHeight;
+  progress.style.setProperty('--p',max>0?Math.min(y/max,1):0);
+  if(!reduceMotion&&cover){
+    // the dot field drifts a little slower than the page, and the cue retires
+    const vh=innerHeight;
+    if(y<vh){
+      cover.style.setProperty('--drift',(y*0.18).toFixed(1)+'px');
+      if(cue)cue.style.opacity=String(Math.max(0,1-y/260));
+    }
+  }
+  updateSpy();
+}
+addEventListener('scroll',()=>{if(!scrollQueued){scrollQueued=true;requestAnimationFrame(onScroll)}},{passive:true});
+addEventListener('resize',()=>{if(!scrollQueued){scrollQueued=true;requestAnimationFrame(onScroll)}},{passive:true});
+
+// stat values count up the first time the band is read
+function countUp(el){
+  const raw=el.textContent.trim();
+  const m=raw.match(/^(\d+)(\D*)$/);
+  if(!m||reduceMotion)return;
+  const target=+m[1],suffix=m[2],dur=900,t0=performance.now();
+  el.textContent='0'+suffix;
+  (function step(t){
+    const k=Math.min((t-t0)/dur,1);
+    // same decelerating feel as the CSS easing
+    el.textContent=Math.round(target*(1-Math.pow(1-k,3)))+suffix;
+    if(k<1)requestAnimationFrame(step);
+  })(t0);
+}
+const countIO=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  countIO.unobserve(e.target);
+  countUp(e.target);
+}),{threshold:.6});
+document.querySelectorAll('.cred-stats b').forEach(b=>countIO.observe(b));
 
 // contact form -> supabase edge function -> sendgrid
 // TODO: this still posts to the jack-morton-contact function, so WM Events leads
@@ -921,23 +1017,24 @@ document.querySelectorAll('.cards .card .art').forEach(a=>
   makeZoomable(a,()=>a.parentElement.querySelector('.txt h4')?.textContent||''));
 
 // nav scrollspy — eight sections is enough that readers want to know where they are
-const spy=[...document.querySelectorAll('.nav-links a[href^="#"]')]
+// var, not const: the shared scroll pass is registered before this line runs, and a
+// let/const here would throw from the temporal dead zone instead of hitting the guard
+var spy=[...document.querySelectorAll('.nav-links a[href^="#"]')]
   .filter(a=>!a.classList.contains('btn-kit'))
   .map(a=>({a,el:document.querySelector(a.getAttribute('href'))}))
   .filter(o=>o.el);
-let spyQueued=false;
+// driven by the shared scroll pass above, not its own listener
 function updateSpy(){
-  spyQueued=false;
+  if(!spy)return;   // scroll can fire before this block has initialised
   const line=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||66)+48;
   let active=null;
   for(const o of spy){if(o.el.getBoundingClientRect().top<=line)active=o}
   spy.forEach(o=>o.a.classList.toggle('active',o===active));
 }
-addEventListener('scroll',()=>{if(!spyQueued){spyQueued=true;requestAnimationFrame(updateSpy)}},{passive:true});
 // re-run once the browser has applied any deep link and settled the layout
 addEventListener('hashchange',updateSpy);
-addEventListener('load',updateSpy);
-updateSpy();
+addEventListener('load',onScroll);
+onScroll();
 
 // scroll reveal — falls back to showing everything if the observer is unavailable
 const reveals=document.querySelectorAll('.reveal');

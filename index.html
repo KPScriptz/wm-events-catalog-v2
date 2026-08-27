@@ -140,7 +140,7 @@ h1,h2,h3{font-family:var(--disp);text-wrap:balance}
 .cover::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(174,198,180,.10) 1px,transparent 1px);background-size:26px 26px;background-position:0 var(--drift,0);mask-image:radial-gradient(700px 500px at 80% 20%,#000 20%,transparent 75%);pointer-events:none;will-change:background-position}
 .cover .scroll-cue{transition:opacity .4s var(--ease-soft)}
 .cover .eyebrow{margin-bottom:1.6rem}
-.cover h1{font-size:clamp(2.4rem,7vw,7rem);font-weight:800;line-height:.94;letter-spacing:-.02em;max-width:13ch;margin-inline:auto}
+.cover h1{font-size:clamp(2.4rem,7vw,7rem);font-weight:700;line-height:.94;letter-spacing:-.02em;max-width:13ch;margin-inline:auto}
 .cover h1 em{font-style:normal;color:var(--mint)}
 .cover .prep{margin-top:2.4rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1rem;font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .cover .prep b{color:var(--ink);font-weight:500}
@@ -157,7 +157,7 @@ h1,h2,h3{font-family:var(--disp);text-wrap:balance}
 section{padding:clamp(4.5rem,10vw,9rem) clamp(1.2rem,6vw,5rem)}
 .sec-head{display:grid;grid-template-columns:auto 1fr;gap:1.2rem 2rem;align-items:baseline;border-top:1px solid var(--line);padding-top:1.6rem;margin-bottom:clamp(2.5rem,5vw,4rem)}
 .sec-head .num{font-family:var(--mono);font-weight:600;font-size:.8rem;color:var(--accent);letter-spacing:.15em}
-.sec-head h2{font-size:clamp(1.45rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere}
+.sec-head h2{font-size:clamp(1.45rem,4.5vw,3.4rem);font-weight:700;letter-spacing:-.01em;overflow-wrap:anywhere}
 .sec-head p{grid-column:2;max-width:62ch;color:var(--muted)}
 
 /* ---------- product spreads ---------- */
@@ -169,7 +169,7 @@ section{padding:clamp(4.5rem,10vw,9rem) clamp(1.2rem,6vw,5rem)}
 .product .stage{background:linear-gradient(180deg,var(--raise),var(--surface));border:1px solid var(--line);border-radius:6px;padding:clamp(1.5rem,3vw,2.6rem);display:flex;align-items:center;justify-content:center;position:sticky;top:5.2rem}
 .product .stage img{max-height:440px;width:auto;max-width:100%;filter:var(--shadow-art)}
 .product .info .kicker{margin-bottom:.5rem}
-.product h3{font-size:clamp(1.6rem,3.2vw,2.4rem);font-weight:800;margin-bottom:.9rem}
+.product h3{font-size:clamp(1.6rem,3.2vw,2.4rem);font-weight:700;margin-bottom:.9rem}
 .product .desc{color:var(--muted);max-width:60ch;margin-bottom:1.4rem}
 .specs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.8rem}
 .specs span{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:.32rem .75rem}
@@ -225,7 +225,7 @@ video{background:var(--raise)}
 .kit{margin:0 clamp(1.2rem,6vw,5rem);border:1px solid var(--mint-deep);border-radius:8px;background:
   radial-gradient(600px 300px at 90% 0%,rgba(1,169,79,.14),transparent 60%),var(--surface);
   padding:clamp(2rem,5vw,3.5rem);display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center}
-.kit h2{font-size:clamp(1.5rem,3.4vw,2.4rem);font-weight:800;text-transform:uppercase;margin-bottom:.7rem}
+.kit h2{font-size:clamp(1.5rem,3.4vw,2.4rem);font-weight:700;text-transform:uppercase;margin-bottom:.7rem}
 .kit p{color:var(--muted);max-width:52ch}
 .kit .actions{display:flex;flex-direction:column;gap:.7rem}
 .kit .actions a{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:.9rem 1.6rem;border-radius:4px}
@@ -241,13 +241,27 @@ video{background:var(--raise)}
 .cred{padding:clamp(2.6rem,5vw,4.2rem) clamp(1.2rem,6vw,5rem) clamp(2rem,4vw,3rem);
   background:radial-gradient(900px 340px at 50% 0%,rgba(1,169,79,.07),transparent 65%)}
 .cred .eyebrow{margin-bottom:1.5rem}
-.cred-roster{display:flex;flex-wrap:wrap;gap:.35rem 1.5rem;margin-bottom:2.4rem;max-width:1150px}
-.cred-roster span{font-family:var(--disp);font-weight:700;text-transform:uppercase;
-  font-size:clamp(.92rem,1.55vw,1.3rem);letter-spacing:.01em;color:var(--muted);line-height:1.4}
-.cred-roster span:not(:last-child)::after{content:"·";color:var(--accent);margin-left:1.5rem;font-weight:400}
+/* client wall: a hairline grid reads as evidence, where an inline list of names
+   read as a list. Borders live on the cells (right+bottom) with the container
+   supplying top+left, rather than a gap over a coloured container — that trick
+   paints the container colour through any empty cells in a short last row. */
+.cred-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  border-top:1px solid var(--line);border-left:1px solid var(--line);
+  border-radius:8px;overflow:hidden;margin-bottom:2.4rem}
+/* 25 entries divide evenly only by five, so pin five across once there is room */
+@media(min-width:1180px){.cred-wall{grid-template-columns:repeat(5,1fr)}}
+.cred-wall>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:1.05rem 1.15rem;display:flex;flex-direction:column;justify-content:center;
+  min-height:5.4rem;transition:background .4s var(--ease-soft)}
+.cred-wall>div:hover{background:var(--surface)}
+.cred-wall b{font-family:var(--disp);font-weight:700;text-transform:uppercase;
+  font-size:1.02rem;letter-spacing:.012em;line-height:1.18;color:var(--ink)}
+.cred-wall span{margin-top:.34rem;font-family:var(--body);font-size:.65rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);line-height:1.5}
+@media(max-width:560px){.cred-wall>div{min-height:0;padding:.9rem 1rem}}
 .cred-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1.4rem 1rem;
   border-top:1px solid var(--line);padding-top:1.9rem}
-.cred-stats b{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(1.5rem,2.8vw,2.2rem);
+.cred-stats b{display:block;font-family:var(--disp);font-weight:700;font-size:clamp(1.5rem,2.8vw,2.2rem);
   color:var(--accent);line-height:1}
 .cred-stats i{display:block;margin-top:.45rem;font-style:normal;font-family:var(--mono);font-size:.65rem;
   letter-spacing:.14em;text-transform:uppercase;color:var(--dim);line-height:1.7}
@@ -276,11 +290,11 @@ video{background:var(--raise)}
 
 /* ---------- proof of work ---------- */
 .proof-grid{display:grid;grid-template-columns:minmax(300px,1fr) minmax(320px,470px);gap:clamp(2rem,4vw,4rem);align-items:start}
-.pg-copy h3{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.1;margin:.8rem 0 1rem}
+.pg-copy h3{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.1;margin:.8rem 0 1rem}
 .pg-copy>p{color:var(--muted);font-size:.98rem;max-width:50ch}
 .pg-stats{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.6rem 0}
 .pg-stats .s{border:1px solid var(--line);border-radius:6px;padding:.85rem 1rem;background:linear-gradient(180deg,var(--surface),transparent)}
-.pg-stats .s b{display:block;font-family:var(--disp);font-weight:800;font-size:1.1rem;color:var(--accent);margin-bottom:.1rem}
+.pg-stats .s b{display:block;font-family:var(--disp);font-weight:700;font-size:1.1rem;color:var(--accent);margin-bottom:.1rem}
 .pg-stats .s span{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .pc-cta{display:inline-block;font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 /* the embeds set body{background:transparent} so they inherit the catalog's colour,
@@ -314,7 +328,7 @@ html:not(.js) .pg-unit iframe,html:not(.js) .phone,html:not(.js) .board{display:
   padding:clamp(1.5rem,3.5vw,2.6rem);display:grid;grid-template-columns:minmax(280px,1.05fr) 1.4fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:center;
   background:radial-gradient(700px 300px at 0% 0%,rgba(1,169,79,.08),transparent 60%),linear-gradient(180deg,var(--surface),var(--bg))}
 .intouch-band .ib-logo{height:46px;width:auto;margin-bottom:1.1rem}
-.intouch-band h3{font-family:var(--disp);font-weight:800;font-size:clamp(1.2rem,2.2vw,1.7rem);line-height:1.12;margin-bottom:.8rem}
+.intouch-band h3{font-family:var(--disp);font-weight:700;font-size:clamp(1.2rem,2.2vw,1.7rem);line-height:1.12;margin-bottom:.8rem}
 .intouch-band .ib-copy p{color:var(--muted);font-size:.95rem;max-width:48ch}
 .ib-flow{display:grid;gap:.7rem}
 .ib-flow .step{display:flex;gap:1rem;align-items:baseline;border:1px solid var(--line);border-radius:6px;padding:.8rem 1rem;background:linear-gradient(180deg,var(--raise),transparent)}
@@ -326,7 +340,7 @@ html:not(.js) .pg-unit iframe,html:not(.js) .phone,html:not(.js) .board{display:
 /* ---------- strikeout duo demo ---------- */
 .duo-block{margin-top:clamp(3rem,6vw,5rem)}
 .duo-head{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,440px);gap:clamp(2rem,4vw,4rem);align-items:center;margin-bottom:clamp(1.6rem,3vw,2.5rem)}
-.duo-head h3{font-family:var(--disp);font-weight:800;text-transform:uppercase;font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.1;margin:.8rem 0 1rem}
+.duo-head h3{font-family:var(--disp);font-weight:700;text-transform:uppercase;font-size:clamp(1.35rem,2.6vw,2rem);line-height:1.1;margin:.8rem 0 1rem}
 .duo-head p{color:var(--muted);font-size:.98rem;max-width:56ch}
 .duo-head b{color:var(--ink);font-weight:600}
 .duo-head .pg-stats{margin:0}
@@ -392,7 +406,7 @@ footer .fine a{color:var(--muted)}
   transition-delay:calc(var(--i,0)*65ms)}
 .js .reveal.stagger.in>*{opacity:1;transform:none}
 /* the roster is a long single line of names — a quicker cadence suits it */
-.js .cred-roster.stagger>*{transform:translateY(14px);transition-delay:calc(var(--i,0)*26ms)}
+.js .cred-wall.stagger>*{transform:translateY(12px);transition-delay:calc(var(--i,0)*22ms)}
 
 /* artwork settles out of a slight push-in as its card arrives */
 .js .reveal .art img,.js .reveal .art video,
@@ -462,13 +476,32 @@ footer .fine a{color:var(--muted)}
      actually scans for. Counts are provable from the catalog contents. -->
 <div class="cred band-light" id="clients">
   <p class="eyebrow">Where this kit has already worked</p>
-  <div class="cred-roster reveal stagger">
-    <span>Chevrolet</span><span>Marvel</span><span>Gymshark</span><span>CMA Fest</span><span>CMA Awards</span>
-    <span>USAA × NFL</span><span>Universal Studios</span><span>LIV&nbsp;Golf</span><span>UFC</span><span>Polaris</span>
-    <span>AbbVie × MLB</span><span>Lexus</span><span>Ticketmaster</span><span>American Family Insurance</span>
-    <span>Downy Unstopables</span><span>State Fair of Texas</span><span>US&nbsp;Cellular</span><span>T.&nbsp;Rowe&nbsp;Price</span>
-    <span>Ally</span><span>Equinox</span><span>Summerfest</span><span>Army–Navy</span><span>ACC Baseball</span>
-    <span>Speedway Classic</span><span>Argylle</span>
+  <div class="cred-wall reveal stagger">
+    <div><b>Chevrolet</b><span>CMA Fest · State Fair of Texas</span></div>
+    <div><b>Marvel</b><span>Brave New World premiere</span></div>
+    <div><b>Polaris</b><span>“Tough Doesn’t Quit” kiosk</span></div>
+    <div><b>AbbVie × MLB</b><span>Striking Out Cancer</span></div>
+    <div><b>USAA × NFL</b><span>Salute to Service</span></div>
+    <div><b>CMA Awards</b><span>Car Karaoke</span></div>
+    <div><b>CMA Fest</b><span>Western Glam AI</span></div>
+    <div><b>Gymshark</b><span>Selfie Station</span></div>
+    <div><b>Universal Studios</b><span>Array bullet-time</span></div>
+    <div><b>Argylle</b><span>Premiere bullet-time</span></div>
+    <div><b>LIV Golf</b><span>Live leaderboards</span></div>
+    <div><b>UFC</b><span>Weigh-in posters</span></div>
+    <div><b>Equinox</b><span>Music Trivia leaderboard</span></div>
+    <div><b>Speedway Classic</b><span>Pitch Against the Machine</span></div>
+    <div><b>Army–Navy</b><span>Football toss + scoreboard</span></div>
+    <div><b>Ally</b><span>ACC bucket wall</span></div>
+    <div><b>T. Rowe Price</b><span>ACC Curiosity Challenge</span></div>
+    <div><b>ACC Baseball</b><span>Trading cards</span></div>
+    <div><b>Lexus</b><span>Trading cards</span></div>
+    <div><b>Ticketmaster</b><span>Trading cards</span></div>
+    <div><b>American Family Insurance</b><span>Marvel robot capture</span></div>
+    <div><b>Downy Unstopables</b><span>Selfie Station</span></div>
+    <div><b>State Fair of Texas</b><span>Magnets + postcards</span></div>
+    <div><b>US Cellular</b><span>Summerfest button wall</span></div>
+    <div><b>Summerfest</b><span>Giant boombox build</span></div>
   </div>
   <div class="cred-stats reveal stagger">
     <div><b>25+</b><i>Brands activated</i></div>

@@ -279,12 +279,6 @@ video{background:var(--raise)}
   background:var(--mint);color:var(--mint-ink);padding:.85rem 1.5rem;border-radius:4px;font-weight:500}
 .cta-band a:hover{background:var(--mint-hi)}
 
-.connect-strip{display:flex;gap:1.2rem;align-items:flex-start;border:1px solid var(--line);border-radius:8px;
-  padding:clamp(1.2rem,2.5vw,1.8rem) clamp(1.4rem,3vw,2.2rem);background:linear-gradient(180deg,var(--surface),transparent)}
-.connect-strip svg{width:26px;height:26px;flex:none;stroke:var(--accent);fill:none;stroke-width:1.5;margin-top:.2rem}
-.connect-strip p{color:var(--muted);font-size:.95rem;max-width:90ch}
-.connect-strip b{color:var(--ink);font-weight:600}
-
 .stage-logo{background:radial-gradient(420px 220px at 50% 42%,rgba(1,169,79,.10),transparent 70%),linear-gradient(180deg,var(--raise),var(--surface));min-height:300px}
 .stage-logo img{width:min(340px,70%);max-height:none;filter:drop-shadow(0 0 34px rgba(241,246,243,.18))}
 
@@ -428,7 +422,7 @@ footer .fine a{color:var(--muted)}
 /* interaction: a short lift, never a bounce */
 .card,.plat .p{transition:transform .5s var(--ease),border-color .35s var(--ease-soft)}
 .card:hover,.plat .p:hover{transform:translateY(-4px);border-color:rgba(1,169,79,.42)}
-.pack:hover,.cta-band a,.btn-kit,.kit .actions a{transition:transform .4s var(--ease),background .3s var(--ease-soft)}
+.cta-band a,.btn-kit,.kit .actions a{transition:transform .4s var(--ease),background .3s var(--ease-soft)}
 .cta-band a:hover,.kit .actions .primary:hover{transform:translateY(-2px)}
 .nav{transition:border-color .3s var(--ease-soft),box-shadow .4s var(--ease-soft)}
 .nav.scrolled{box-shadow:0 12px 34px -22px rgba(0,0,0,.9)}

@@ -382,6 +382,10 @@ html:not(.js) .pg-unit iframe,html:not(.js) .phone,html:not(.js) .board{display:
 .cf-status{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .cf-status.ok{color:var(--accent)}
 .cf-status.err{color:var(--err)}
+/* the fallback mail link has to be obviously clickable — it is the only route the
+   lead has left when the POST is blocked */
+.cf-status a{color:var(--err);text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.cf-status a:hover{color:var(--accent)}
 
 /* ---------- footer ---------- */
 footer{padding:4rem clamp(1.2rem,6vw,5rem) 3rem;display:flex;flex-wrap:wrap;gap:2rem;align-items:center;justify-content:space-between;border-top:1px solid var(--line);margin-top:clamp(4rem,8vw,6rem)}
@@ -969,20 +973,57 @@ document.querySelectorAll('.cred-stats b').forEach(b=>countIO.observe(b));
 //       stamp) and switch the slug below. Verified 2026-08-26: wm-events-contact
 //       returns 404, so do NOT flip the slug before it exists — that silently
 //       breaks every quote request.
+//
+// KNOWN BREAKAGE — the form cannot submit from anywhere but the original domain.
+// The function answers every preflight with a hardcoded
+//     access-control-allow-origin: https://pivotxp.github.io
+// regardless of who asked, so the browser blocks the POST from any other host and
+// the catch below fires. Server-side fix: echo the request Origin when it is on the
+// allowlist, e.g.
+//     const ALLOWED = ['https://pivotxp.github.io','https://kpscriptz.github.io']
+//     const origin  = req.headers.get('Origin')
+//     'Access-Control-Allow-Origin': ALLOWED.includes(origin) ? origin : ALLOWED[0]
+// on BOTH the OPTIONS response and the POST response. Until then the mailto
+// fallback below is what actually gets the lead to Tommy.
+const CONTACT_TO='tommy@pivotxp.com';
 const qf=document.getElementById('quoteForm');
 if(qf){
   const st=document.getElementById('cfStatus'),btn=qf.querySelector('.cf-submit');
+  // If the POST can't get through, hand the visitor a pre-filled mail draft rather
+  // than a dead end — a quote request is too expensive to drop on a network error.
+  const mailtoFor=d=>{
+    const body=[
+      `Name: ${d.name}`,
+      `Email: ${d.email}`,
+      d.phone?`Phone: ${d.phone}`:null,
+      '',
+      d.comments||'(no details given)'
+    ].filter(v=>v!==null).join('\n');
+    return 'mailto:'+CONTACT_TO
+      +'?subject='+encodeURIComponent('Quote request — '+d.name)
+      +'&body='+encodeURIComponent(body.slice(0,1500));
+  };
   qf.addEventListener('submit',async e=>{
     e.preventDefault();
     const d=Object.fromEntries(new FormData(qf).entries());
     if(!d.name.trim()||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)){st.textContent='Name and a valid email, please';st.className='cf-status err';return}
+    if(d.website){st.textContent='Sent — we’ll be in touch shortly';st.className='cf-status ok';qf.reset();return} // honeypot
+    delete d.website;
     btn.disabled=true;st.textContent='Sending…';st.className='cf-status';
     try{
       const r=await fetch('https://jlgvaejxydcteciqzgub.supabase.co/functions/v1/jack-morton-contact',{
         method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
-      if(!r.ok)throw new Error();
+      if(!r.ok)throw new Error('HTTP '+r.status);
       st.textContent='Sent — we’ll be in touch shortly';st.className='cf-status ok';qf.reset();
-    }catch(_){st.textContent='Something hiccuped — email tommy@pivotxp.com instead';st.className='cf-status err'}
+    }catch(_){
+      st.className='cf-status err';
+      st.innerHTML='';
+      st.append('Couldn’t reach the server — ');
+      const a=document.createElement('a');
+      a.href=mailtoFor(d);
+      a.textContent='send it from your mail app instead →';
+      st.append(a);
+    }
     btn.disabled=false;
   });
 }

@@ -22,6 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0C2412">
 <meta name="color-scheme" content="dark">
+<link rel="preload" as="image" href="assets/img/hero-armynavy.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&amp;display=swap">
@@ -136,20 +137,35 @@ h1,h2,h3{font-family:var(--disp);text-wrap:balance}
   radial-gradient(1200px 600px at 85% -10%,rgba(1,169,79,.10),transparent 60%),
   radial-gradient(900px 500px at -10% 110%,rgba(1,169,79,.06),transparent 60%),
   var(--bg)}
+/* Full-bleed opening frame. The type-only cover read as a document title page;
+   a real activation behind it — the build, the live board, a guest mid-throw —
+   says what Pivot does before a word is read. */
+.cover-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.cover-media img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;
+  transform:scale(1.06) translateY(calc(var(--drift,0) * .5));will-change:transform}
+/* Scrim carries the contrast, so the headline never depends on what the photo is
+   doing underneath it. Measured against the rendered pixels, not eyeballed. */
+.cover-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(180deg,rgba(6,20,11,.80) 0%,rgba(6,20,11,.62) 34%,rgba(6,20,11,.72) 64%,rgba(6,20,11,.94) 100%),
+  radial-gradient(120% 78% at 50% 45%,transparent 12%,rgba(6,20,11,.55) 78%)}
+/* lift the hero copy above the scrim — but skip .scroll-cue, which is already
+   absolutely positioned against the cover and carries its own z-index. Forcing
+   position:relative on it dropped it into the flex flow, on top of the CTA. */
+.cover>*:not(.cover-media):not(.cover-scrim):not(.scroll-cue){position:relative;z-index:2}
 /* --drift is set from the scroll pass so the dot field trails the page slightly */
-.cover::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(174,198,180,.10) 1px,transparent 1px);background-size:26px 26px;background-position:0 var(--drift,0);mask-image:radial-gradient(700px 500px at 80% 20%,#000 20%,transparent 75%);pointer-events:none;will-change:background-position}
+.cover::after{content:"";position:absolute;inset:0;z-index:1;background-image:radial-gradient(rgba(174,198,180,.10) 1px,transparent 1px);background-size:26px 26px;background-position:0 var(--drift,0);mask-image:radial-gradient(700px 500px at 80% 20%,#000 20%,transparent 75%);pointer-events:none;will-change:background-position}
 .cover .scroll-cue{transition:opacity .4s var(--ease-soft)}
 .cover .eyebrow{margin-bottom:1.6rem}
 .cover h1{font-size:clamp(2.4rem,7vw,7rem);font-weight:700;line-height:.94;letter-spacing:-.02em;max-width:13ch;margin-inline:auto}
 .cover h1 em{font-style:normal;color:var(--mint)}
-.cover .prep{margin-top:2.4rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1rem;font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cover .prep{margin-top:2.4rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1rem;font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,254,247,.82)}
 .cover .prep b{color:var(--ink);font-weight:500}
 .cover .prep::before{content:"";width:2.6rem;height:1px;background:var(--mint)}
-.cover p.lede{margin-top:1.5rem;max-width:52ch;margin-inline:auto;color:var(--muted);font-size:1.1rem}
+.cover p.lede{margin-top:1.5rem;max-width:52ch;margin-inline:auto;color:rgba(255,254,247,.90);font-size:1.1rem}
 .cover .demo-cue{margin-top:1.6rem}
 .cover .demo-cue a{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(1,169,79,.4);border-radius:99px;padding:.55rem 1.1rem;transition:background .2s,border-color .2s}
 .cover .demo-cue a:hover{background:rgba(1,169,79,.12);border-color:var(--mint)}
-.cover .scroll-cue{position:absolute;bottom:2rem;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);animation:cue 2.6s ease-in-out infinite}
+.cover .scroll-cue{position:absolute;z-index:2;bottom:2rem;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,254,247,.68);animation:cue 2.6s ease-in-out infinite}
 @keyframes cue{50%{transform:translateY(6px);opacity:.5}}
 @media(prefers-reduced-motion:reduce){.cover .scroll-cue{animation:none}}
 
@@ -281,6 +297,23 @@ video{background:var(--raise)}
 
 .stage-logo{background:radial-gradient(420px 220px at 50% 42%,rgba(1,169,79,.10),transparent 70%),linear-gradient(180deg,var(--raise),var(--surface));min-height:300px}
 .stage-logo img{width:min(340px,70%);max-height:none;filter:drop-shadow(0 0 34px rgba(241,246,243,.18))}
+
+/* ---------- full-bleed break ----------
+   A cinematic pause between the field work and the live demos. Edge-to-edge,
+   so it breaks the column rhythm the rest of the page keeps. */
+.bleed{position:relative;margin:0;height:clamp(320px,52vh,620px);overflow:hidden;background:var(--raise)}
+.bleed img{width:100%;height:100%;object-fit:cover;object-position:50% 46%;
+  transform:scale(1.04);transition:transform 1.4s var(--ease)}
+.js .bleed.in img{transform:none}
+.bleed figcaption{position:absolute;inset:auto 0 0 0;z-index:2;
+  padding:clamp(2rem,6vw,4rem) clamp(1.2rem,6vw,5rem) clamp(1.4rem,3vw,2.2rem);
+  background:linear-gradient(transparent,rgba(6,20,11,.88));
+  font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(255,254,247,.88)}
+/* the break already supplies the breathing room, so the section after it does not
+   need its full top padding as well */
+.bleed + section{padding-top:clamp(2.5rem,5vw,4rem)}
+@media(prefers-reduced-motion:reduce){.bleed img,.js .bleed.in img{transform:none;transition:none}}
 
 /* ---------- proof of work ---------- */
 .proof-grid{display:grid;grid-template-columns:minmax(300px,1fr) minmax(320px,470px);gap:clamp(2rem,4vw,4rem);align-items:start}
@@ -460,6 +493,11 @@ footer .fine a{color:var(--muted)}
 
 <main id="main">
 <header class="cover band-dark" id="top">
+  <div class="cover-media">
+    <img src="assets/img/hero-armynavy.webp" width="1600" height="900" fetchpriority="high" decoding="async"
+         alt="A guest throwing at the Chevrolet football-toss build at the Army-Navy game, live scoreboard overhead and Pivot crew running tablets alongside">
+  </div>
+  <div class="cover-scrim"></div>
   <p class="eyebrow">PivotXP · Experiential Technology</p>
   <h1>The<br>Experience<br><em>Catalog</em></h1>
   <p class="prep">Prepared for <b>&nbsp;WM Events</b>&nbsp;· August 2026</p>
@@ -740,14 +778,20 @@ footer .fine a{color:var(--muted)}
   </div>
   <div class="media reveal stagger field-grid">
     <figure class="vwrap"><video preload="none" data-poster="assets/poster/install-liv.jpg" src="assets/video/install-liv.mp4" playsinline width="960" height="540"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
-    <figure><img src="assets/img/field-armynavy.jpg" alt="Chevrolet football toss cage at the Army-Navy game with live scoreboard and leaderboard" loading="lazy" width="1600" height="900"></figure>
-    <figure><img src="assets/img/field-uscellular.jpg" alt="US Cellular giant boombox button wall at Summerfest" loading="lazy" width="1600" height="1200"></figure>
+    <figure><img src="assets/img/field-armynavy.webp" alt="Chevrolet football toss cage at the Army-Navy game with live scoreboard and leaderboard" loading="lazy" width="900" height="506"></figure>
+    <figure><img src="assets/img/field-uscellular.webp" alt="US Cellular giant boombox button wall at Summerfest" loading="lazy" width="900" height="675"></figure>
     <figure><img src="assets/img/field-ally.jpg" alt="Ally ACC Women's Tournament basketball bucket wall with live leaderboard" loading="lazy" width="1299" height="1400"></figure>
     <figure><img src="assets/img/field-trowe.jpg" alt="T. Rowe Price Curiosity Challenge trivia podium at the ACC Men's Tournament" loading="lazy" width="1233" height="1600"></figure>
     <figure class="vwrap"><video preload="none" data-poster="assets/poster/field-experience.jpg" src="assets/video/field-experience.mp4" playsinline width="320" height="568"></video><span class="playbtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></figure>
     <figure><img src="assets/img/install-photo.jpg" alt="Custom activation install" loading="lazy" width="1400" height="1050"></figure>
   </div>
 </section>
+
+<figure class="bleed reveal">
+  <img src="assets/img/bleed-uscellular.webp" width="1600" height="1200" loading="lazy" decoding="async"
+       alt="The US Cellular giant boombox button wall built by Pivot for Summerfest">
+  <figcaption>US Cellular · Summerfest — designed, fabricated and run by Pivot crews</figcaption>
+</figure>
 
 <!-- ==================== 07 PROOF OF WORK ==================== -->
 <section id="proof" class="band-dark">
